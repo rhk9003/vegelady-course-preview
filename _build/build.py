@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""組裝 version-a／version-b 頁面。
+"""組裝銷售頁預覽（單一版本，輸出根目錄 index.html）。
 
 原始檔在 _src/：
 - 區塊用 data-sec="區塊名稱" 標記（修改單裡顯示的位置名稱）
@@ -9,7 +9,7 @@
 
     python3 _build/build.py
 
-改了文字就要同步提高該頁的 revision（舊瀏覽器草稿會因原文不符被拒絕匯入，不會誤套）。
+改了文字就要同步提高 revision（舊瀏覽器草稿會因原文不符被拒絕匯入，不會誤套）。
 """
 import pathlib
 import re
@@ -17,28 +17,25 @@ import re
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 
 PAGES = {
-    "version-a": {
-        "letter": "a",
-        "title": "原文排版版｜羽試・免費先修班",
-        "review_title": "羽試 A版（原文排版）",
-        "revision": "yushi-a-2026-10-09",
-    },
-    "version-b": {
-        "letter": "b",
-        "title": "新文案版｜羽試・免費先修班",
-        "review_title": "羽試 B版（新文案）",
-        "revision": "yushi-b-2026-10-09",
+    # 只做一版（D&J 文案）；輸出到根目錄 index.html。
+    "index": {
+        "out": "index.html",
+        "prefix": "",
+        "review_page": "landing",
+        "title": "羽試・2026 高效搶分實戰先修班｜銷售頁預覽",
+        "review_title": "羽試 先修班銷售頁",
+        "revision": "yushi-lp-2026-10-09",
     },
 }
 
 HEAD = """<!DOCTYPE html>
-<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><meta name="description" content="羽試國考培育學院免費先修班銷售頁排版預覽。"><meta name="theme-color" content="#a66440"><title>{title}</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&amp;family=Noto+Serif+TC:wght@400;500;600;700&amp;display=swap" rel="stylesheet"><link rel="stylesheet" href="../styles.css"><script defer src="../script.js"></script><link rel="stylesheet" href="../review.css"><script defer src="../review-core.js"></script><script defer src="../review.js"></script></head>
-<body data-version="{letter}" data-review-page="{page}" data-review-revision="{revision}" data-review-title="{review_title}">
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><meta name="description" content="羽試國考培育學院免費先修班銷售頁排版預覽。"><meta name="theme-color" content="#a66440"><title>{title}</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&amp;family=Noto+Serif+TC:wght@400;500;600;700&amp;display=swap" rel="stylesheet"><link rel="stylesheet" href="{prefix}styles.css"><script defer src="{prefix}script.js"></script><link rel="stylesheet" href="{prefix}review.css"><script defer src="{prefix}review-core.js"></script><script defer src="{prefix}review.js"></script></head>
+<body data-review-page="{review_page}" data-review-revision="{revision}" data-review-title="{review_title}">
 <a class="skip-link" href="#main">跳至主要內容</a>
-<div class="preview-bar"><span>羽試｜先修班銷售頁提案</span><nav aria-label="預覽版本"><a data-version="a" href="../version-a/">A・原文排版</a><a data-version="b" href="../version-b/">B・新文案</a></nav></div>
+<div class="preview-bar"><span>羽試｜先修班銷售頁提案・設計預覽</span><span>右下角「提出文字修改」可直接留修改</span></div>
 """
 
-FOOT = """<footer class="site-footer" data-sec="導覽與頁尾"><div class="wrap"><div class="footer-inner"><div><a class="logo" href="#main" aria-label="回到頁首"><img src="../assets/logo-mark.png" alt="" width="46" height="46"><span class="logo-text">羽試國考培育學院<small>VEGELADY</small></span></a><p data-c>羽化成蝶｜和更高版本的自己相識</p></div><div class="footer-links"><a href="https://vegelady.com/" target="_blank" rel="noopener noreferrer">官網首頁 ↗</a><a href="https://vegelady.com/free-course/" target="_blank" rel="noopener noreferrer">原先修課頁 ↗</a><a href="mailto:dura@vegelady.com">聯絡信箱</a></div></div><div class="footer-bottom"><span>羽試培育工作室 © All Rights Reserved.｜統編 00618628</span><span>聯絡電話 0983934599</span></div><p class="preview-note">版型預覽提案・非正式官網｜照片與原文取自羽試國考培育學院公開頁面（2026-10-09 讀取），報名按鈕連至目前的報名表。</p></div></footer>
+FOOT = """<footer class="site-footer" data-sec="導覽與頁尾"><div class="wrap"><div class="footer-inner"><div><a class="logo" href="#main" aria-label="回到頁首"><img src="{prefix}assets/logo-mark.png" alt="" width="46" height="46"><span class="logo-text">羽試國考培育學院<small>VEGELADY</small></span></a><p data-c>羽化成蝶｜和更高版本的自己相識</p></div><div class="footer-links"><a href="https://vegelady.com/" target="_blank" rel="noopener noreferrer">官網首頁 ↗</a><a href="https://vegelady.com/free-course/" target="_blank" rel="noopener noreferrer">原先修課頁 ↗</a><a href="mailto:dura@vegelady.com">聯絡信箱</a></div></div><div class="footer-bottom"><span>羽試培育工作室 © All Rights Reserved.｜統編 00618628</span><span>聯絡電話 0983934599</span></div><p class="preview-note">版型預覽提案・非正式官網｜照片與原文取自羽試國考培育學院公開頁面（2026-10-09 讀取），報名按鈕連至目前的報名表。</p></div></footer>
 <div class="mobile-cta"><span>免費線上先修班</span><a href="https://go.vegelady.com/#form" target="_blank" rel="noopener noreferrer">免費報名 ↗</a></div>
 </body></html>
 """
@@ -86,13 +83,13 @@ def check_nesting(html: str, page: str) -> None:
 def main() -> None:
     for page, cfg in PAGES.items():
         body = (ROOT / "_src" / f"{page}.html").read_text(encoding="utf-8")
-        html = HEAD.format(page=page, **cfg) + body.strip() + "\n" + FOOT
+        body = body.replace("../assets/", cfg["prefix"] + "assets/")
+        html = HEAD.format(**cfg) + body.strip() + "\n" + FOOT.replace("{prefix}", cfg["prefix"])
         html = number_copy(html)
         check_nesting(html, page)
         leftover = re.findall(r"\sdata-(?:c|sec)(?=[\s=>/])", html)
         assert not leftover, (page, leftover[:3])
-        out = ROOT / page / "index.html"
-        out.parent.mkdir(exist_ok=True)
+        out = ROOT / cfg["out"]
         out.write_text(html, encoding="utf-8")
         print(page, html.count("data-copy-id="), "個可修改區塊 →", out.relative_to(ROOT))
 

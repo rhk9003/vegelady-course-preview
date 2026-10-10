@@ -24,7 +24,7 @@ PAGES = {
         "review_page": "landing",
         "title": "羽試・2026 高效搶分實戰先修班｜銷售頁預覽",
         "review_title": "羽試 先修班銷售頁",
-        "revision": "yushi-lp-2026-10-09",
+        "revision": "yushi-lp-2026-10-10",
     },
 }
 

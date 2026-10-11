@@ -24,7 +24,7 @@ PAGES = {
         "review_page": "landing",
         "title": "羽試・2026 高效搶分實戰先修班｜銷售頁預覽",
         "review_title": "羽試 先修班銷售頁",
-        "revision": "yushi-lp-2026-10-11",
+        "revision": "yushi-lp-2026-10-12",
     },
 }
 
@@ -35,8 +35,8 @@ HEAD = """<!DOCTYPE html>
 <div class="preview-bar"><span>羽試｜先修班銷售頁提案・設計預覽</span><span>右下角「提出文字修改」可直接留修改</span></div>
 """
 
-FOOT = """<footer class="site-footer" data-sec="導覽與頁尾"><div class="wrap"><div class="footer-inner"><div><a class="logo" href="#main" aria-label="回到頁首"><img src="{prefix}assets/logo-mark.png" alt="" width="46" height="46"><span class="logo-text">羽試國考培育學院<small>VEGELADY</small></span></a><p data-c>羽化成蝶｜和更高版本的自己相識</p></div><div class="footer-links"><a href="https://vegelady.com/" target="_blank" rel="noopener noreferrer">官網首頁 ↗</a><a href="https://vegelady.com/free-course/" target="_blank" rel="noopener noreferrer">原先修課頁 ↗</a><a href="mailto:dura@vegelady.com">聯絡信箱</a></div></div><div class="footer-bottom"><span>羽試培育工作室 © All Rights Reserved.｜統編 00618628</span><span>聯絡電話 0983934599</span></div><p class="preview-note">版型預覽提案・非正式官網｜照片與原文取自羽試國考培育學院公開頁面（2026-10-09 讀取），報名按鈕連至目前的報名表。</p></div></footer>
-<div class="mobile-cta"><span>免費線上先修班</span><a href="https://go.vegelady.com/#form" target="_blank" rel="noopener noreferrer">免費報名 ↗</a></div>
+FOOT = """<footer class="site-footer" data-sec="導覽與頁尾"><div class="wrap"><div class="footer-inner"><div><a class="logo" href="#main" aria-label="回到頁首"><img src="{prefix}assets/logo-mark.png" alt="" width="46" height="46"><span class="logo-text">羽試國考培育學院<small>VEGELADY</small></span></a><p data-c>羽化成蝶｜和更高版本的自己相識</p></div><div class="footer-links"><a href="https://vegelady.com/" target="_blank" rel="noopener noreferrer">官網首頁 ↗</a><a href="https://vegelady.com/free-course/" target="_blank" rel="noopener noreferrer">原先修課頁 ↗</a><a href="mailto:dura@vegelady.com">聯絡信箱</a></div></div><div class="footer-bottom"><span>羽試培育工作室 © All Rights Reserved.｜統編 00618628</span><span>聯絡電話 0983934599</span></div><p class="preview-note">版型預覽提案・非正式官網｜照片與原文取自羽試國考培育學院公開頁面（2026-10-09 讀取），報名按鈕連至羽試 LINE 官方帳號（場次在 LINE 上通知）。</p></div></footer>
+<div class="mobile-cta"><span>免費線上先修班</span><a href="https://lin.ee/fqVra6s" target="_blank" rel="noopener noreferrer">免費報名 ↗</a></div>
 </body></html>
 """
 

@@ -101,3 +101,20 @@
 .letter-sign{font:500 22px/1.6 var(--serif);font-style:normal}
 .closing-statement>span{font-style:normal;font-family:var(--serif);letter-spacing:.1em}
 .get-list li>span{display:block}
+/* 客戶回稿 2026-10-11：115 年上榜名單卡、上榜當天訊息 */
+.pass-card{justify-content:flex-start}
+.pass-year{font:600 22px/1.5 var(--serif);color:var(--slate);letter-spacing:.04em;margin-bottom:14px}
+.pass-list{list-style:none;padding:0;margin:0 0 auto;flex:1}
+.pass-list li{display:grid;grid-template-columns:86px 1fr;gap:12px;align-items:baseline;padding:14px 0;border-top:1px solid #eee8e4}
+.pass-list li:first-child{border-top:0}
+.pass-list strong{font:700 17px/1.6 var(--serif);color:var(--ink)}
+.pass-list span{font-size:14px;line-height:1.7;color:#6a5f58}
+.chat-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.chat-card{background:#fff;border-radius:3px;padding:26px 28px 30px;display:flex;flex-direction:column;gap:14px}
+.chat-tag{font:600 15px/1.5 var(--sans);color:var(--slate);letter-spacing:.06em}
+.bubble{max-width:86%;padding:12px 18px 14px;border-radius:18px}
+.bubble .who{display:block;font-size:12px;line-height:1.5;color:#8a7e77;margin-bottom:2px}
+.bubble p{font-size:15px;line-height:1.8;color:var(--ink)}
+.bubble.me{align-self:flex-start;background:#f4efec;border-bottom-left-radius:4px}
+.bubble.her{align-self:flex-end;background:#f6e7de;border-bottom-right-radius:4px}
+@media(max-width:600px){.chat-grid{grid-template-columns:1fr}.chat-card{padding:22px}.pass-list li{grid-template-columns:72px 1fr}}

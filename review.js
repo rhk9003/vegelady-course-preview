@@ -24,6 +24,19 @@
     loadWarning = '此瀏覽器的舊草稿無法讀取，或不允許本機儲存。這次修改請完成後下載備份；舊資料不會被覆蓋。';
   }
 
+  // 頁面改版（revision 換新）後，上一版留下的修改無法標回新頁面；找出來讓使用者複製或下載給 Dennis，舊資料不刪。
+  let previous = null;
+  try {
+    const prefix = `yushi-copy-review:${page}:`;
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (!key || !key.startsWith(prefix) || key === storageKey) continue;
+      const raw = localStorage.getItem(key), old = JSON.parse(raw);
+      if (old && old.page === page && Array.isArray(old.comments) && old.comments.length &&
+          (!previous || key > previous.key)) previous = { key, raw, revision: key.slice(prefix.length), comments: old.comments };
+    }
+  } catch { /* Leave old browser data untouched. */ }
+
   const root = document.createElement('div');
   root.id = 'copy-review-root';
   root.innerHTML = `
@@ -36,6 +49,10 @@
       <div class="review-panel-head"><h2 id="review-list-title" tabindex="-1">你的修改清單</h2><button type="button" data-action="close-list" aria-label="收起修改清單">×</button></div>
       <p class="review-help">原網頁會保留原文，已提出修改的地方會以淡黃色標記。</p>
       <p class="review-status"></p><p class="review-warning" hidden></p>
+      <div class="review-previous" hidden>
+        <p class="review-warning"></p>
+        <div class="review-export-actions" style="margin-top:0;padding-top:0;border-top:0"><button type="button" class="review-primary" data-action="previous-copy">複製上一版的修改</button><button type="button" data-action="previous-backup">下載上一版草稿</button></div>
+      </div>
       <div class="review-list"></div>
       <button type="button" data-action="undo" hidden>復原剛才刪除的修改</button>
       <div class="review-export-actions"><button type="button" class="review-primary" data-action="export">下載修改單</button><button type="button" data-action="copy">複製給 Dennis</button><button type="button" data-action="backup">下載備份</button><button type="button" data-action="import">匯入備份</button></div>
@@ -81,7 +98,9 @@
   }
   function render() {
     $('[data-action="list"]').textContent=`修改清單 (${comments.length})`;
-    $('.review-launcher').textContent=comments.length?`✎ 文字修改 (${comments.length})`:'✎ 提出文字修改';
+    $('.review-launcher').textContent=comments.length?`✎ 文字修改 (${comments.length})`:(previous?'✎ 文字修改（有上一版草稿）':'✎ 提出文字修改');
+    $('.review-previous').hidden=!previous;
+    if(previous)$('.review-previous .review-warning').textContent=`這台裝置還有上一版頁面留下的 ${previous.comments.length} 筆修改。頁面已經更新，舊修改沒辦法標回新頁面；請按「複製上一版的修改」貼給 Dennis，或下載草稿傳給他。`;
     $('.review-status').textContent=storageAvailable?'草稿保存在此瀏覽器；尚未傳送給 Dennis。':'目前僅保留在這個分頁，請下載後交給 Dennis。';
     $('.review-warning').hidden=!loadWarning; $('.review-warning').textContent=loadWarning;
     $('[data-action="undo"]').hidden=!undoComment||comments.some(c=>c.id===undoComment.id);
@@ -123,7 +142,7 @@
     for(const el of blockElements){if(value)el.setAttribute('tabindex','0');else if(originalTabIndexes.get(el)===null)el.removeAttribute('tabindex');else el.setAttribute('tabindex',originalTabIndexes.get(el));}
     if(!value){panel.hidden=true;selectButton.hidden=true;candidate=null;window.getSelection()?.removeAllRanges();}
     renderHighlights();
-    if(value){toast('先框選要修改的文字；也可以點一下整段。');if(loadWarning){panel.hidden=false;}}
+    if(value){toast('先框選要修改的文字；也可以點一下整段。');if(loadWarning||previous){panel.hidden=false;}}
   }
   function openEditor(target) {
     const block=blockById.get(target.blockId);if(!block)return;
@@ -210,6 +229,12 @@
     if(action==='export')exportReview();
     if(action==='backup'){download(`${title}-修改備份.json`,JSON.stringify(pack(sorted()),null,2),'application/json');toast('備份已下載，可在另一台裝置匯入繼續修改。');}
     if(action==='import')$('#review-import').click();
+    if(action==='previous-backup'&&previous){download(`${title}-上一版修改草稿.json`,previous.raw,'application/json');toast('上一版草稿已下載，請傳給 Dennis。');}
+    if(action==='previous-copy'&&previous){
+      const text=core.toPlainTextLoose(previous.comments,`${title}（上一版頁面 ${previous.revision}）`);
+      try{await navigator.clipboard.writeText(text);toast('已複製上一版的修改。請貼給 Dennis，才算送出。');}
+      catch{const copyDialog=$('.review-copy-dialog');copyDialog.querySelector('textarea').value=text;copyDialog.showModal();copyDialog.querySelector('textarea').select();}
+    }
     if(action==='copy'){
       const text=core.toPlainText(sorted(),blocks,title);
       try{await navigator.clipboard.writeText(text);toast('已複製。請貼給 Dennis，才算送出修改。');}

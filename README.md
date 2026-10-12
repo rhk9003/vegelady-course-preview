@@ -13,7 +13,8 @@
 - 草稿用 localStorage 存在這台裝置的瀏覽器，沒有自動傳送或雲端同步。
 - 「下載修改單」產生可閱讀的 HTML；「複製給 Dennis」產生純文字。使用者需自行傳送。
 - 「下載備份／匯入備份」用 JSON；匯入會驗證原文位置與版本，保留既有草稿，衝突時整份拒絕，不部分覆蓋。
-- 版本號寫在 `_build/build.py` 的 `PAGES`（目前 `yushi-lp-2026-10-12`）。改了頁面文字要同步提高版本號，舊草稿會因原文不符被拒絕匯入，不會套錯位置。
+- 頁面改版後，同一台裝置上一版留下的修改不會不見：修改清單會出現「複製上一版的修改」「下載上一版草稿」，讓使用者把舊修改傳給 Dennis（舊資料不刪）。
+- 版本號寫在 `_build/build.py` 的 `PAGES`（目前 `yushi-lp-2026-10-12b`）。改了頁面文字要同步提高版本號，舊草稿會因原文不符被拒絕匯入，不會套錯位置。
 - `review-core.js` 是無 DOM 的驗證與匯出邏輯；`review.js` 是頁面互動，從 `<body>` 的 `data-review-page`／`data-review-revision`／`data-review-title` 讀設定；`review.css` 是獨立樣式。
 - 本機測試：`node --test review-core.test.cjs`。
 

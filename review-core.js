@@ -131,5 +131,17 @@
     return lines.join('\n') + '\n';
   }
 
-  return Object.freeze({ SCHEMA, VERSION, metadataFor, validateDocument, escapeHtml, toPlainText, findOverlap });
+  // 上一版頁面的草稿：區塊標題已對不上新頁面，只列原文與改稿。
+  function toPlainTextLoose(comments, title) {
+    const list = Array.isArray(comments) ? comments : [];
+    const lines = [title + '｜文案修改單', '共 ' + list.length + ' 筆修改'];
+    list.forEach(function (comment, index) {
+      const c = comment || {};
+      lines.push('', '【' + (index + 1) + '】', '原文：', String(c.original == null ? '' : c.original),
+        '改為：', String(c.replacement == null ? '' : c.replacement), '補充說明：', String(c.note || '無'));
+    });
+    return lines.join('\n') + '\n';
+  }
+
+  return Object.freeze({ SCHEMA, VERSION, metadataFor, validateDocument, escapeHtml, toPlainText, toPlainTextLoose, findOverlap });
 });

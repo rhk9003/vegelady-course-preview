@@ -2,7 +2,7 @@
 
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const { metadataFor, validateDocument, escapeHtml, toPlainText, findOverlap } = require('./review-core.js');
+const { metadataFor, validateDocument, escapeHtml, toPlainText, toPlainTextLoose, findOverlap } = require('./review-core.js');
 
 const META = metadataFor('version-b', 'yushi-b-2026-10-09');
 const blocks = [
@@ -101,4 +101,10 @@ test('純文字修改單包括頁面名稱、區塊、原文、改為與補充�
   assert.equal(toPlainText([comment({ note: '語氣再直接一點。' })], blocks, '羽試 B版'),
     '羽試 B版｜文案修改單\n共 1 筆修改\n\n【1】第一屏標題\n原文：\n先看清\n改為：\n先弄清\n補充說明：\n語氣再直接一點。\n');
   assert.equal(toPlainText([], blocks, '羽試 B版'), '羽試 B版｜文案修改單\n共 0 筆修改\n');
+});
+
+test('上一版草稿只列原文與改稿，不依賴新頁面的區塊', () => {
+  assert.equal(toPlainTextLoose([comment({ note: '' })], '羽試（上一版）'),
+    '羽試（上一版）｜文案修改單\n共 1 筆修改\n\n【1】\n原文：\n先看清\n改為：\n先弄清\n補充說明：\n無\n');
+  assert.equal(toPlainTextLoose(null, 'x'), 'x｜文案修改單\n共 0 筆修改\n');
 });

@@ -30,6 +30,6 @@ python3 _build/build.py
 
 ## WordPress 上線版（vegelady.com/free-course/）
 
-`python3 _build/build_wp.py` 用同一份 `_src/index.html`＋`styles.css` 產生 `_wp/free-course-elementor.html`（整段貼進 Elementor「HTML」小工具，頁面範本用 Elementor Canvas）與 `_wp/elementor-data.json`（一個滿版容器＋HTML 小工具）。差別：沒有文字修改器與預覽列、整頁包在 shadow DOM（`#ys-free-course`）、圖片用官網媒體庫（`_wp/media-map.json`，2026-10-13 上傳，檔名 `ys-free-course-*`）。
+`python3 _build/build_wp.py` 用同一份 `_src/index.html`＋`styles.css` 產生 `_wp/free-course-elementor.html`（整段貼進 Elementor「HTML」小工具；頁面範本維持「Elementor 全寬」、保留官網頁首頁尾，所以本頁不放自己的頁首與頁尾，只留手機底部報名按鈕；`--layout canvas` 可改出整頁版）與 `_wp/elementor-data.json`（一個滿版容器＋HTML 小工具）。差別：沒有文字修改器與預覽列、整頁包在 shadow DOM（`#ys-free-course`）、圖片用官網媒體庫（`_wp/media-map.json`，2026-10-13 上傳，檔名 `ys-free-course-*`）。
 
 **轉換追蹤（Pixel Cat）**：沿用官網現有事件 `free-course`（URL 觸發 `https://lin.ee/fqVra6s`）。Pixel Cat 只會綁 light DOM 裡 href 完全相同的 `<a>`，shadow DOM 裡的按鈕它找不到，所以 host 底下放一個不顯示的同網址連結 `#ys-free-course-line`，每顆 LINE 按鈕被點時用 `jQuery(proxy).triggerHandler('click')` 只觸發 Pixel Cat 綁的事件。**改 LINE 網址要同時改這裡和 Pixel Cat 的觸發網址。** 不要改成 CSS 觸發 `#某 id`：id 一頁只能有一個，Pixel Cat 用 jQuery 綁 `#id` 只會綁到第一顆，其他按鈕都不會送。

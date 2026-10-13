@@ -33,3 +33,7 @@ python3 _build/build.py
 `python3 _build/build_wp.py` 用同一份 `_src/index.html`＋`styles.css` 產生 `_wp/free-course-elementor.html`（整段貼進 Elementor「HTML」小工具；頁面範本維持「Elementor 全寬」、保留官網頁首頁尾，所以本頁不放自己的頁首與頁尾，只留手機底部報名按鈕；`--layout canvas` 可改出整頁版）與 `_wp/elementor-data.json`（一個滿版容器＋HTML 小工具）。差別：沒有文字修改器與預覽列、整頁包在 shadow DOM（`#ys-free-course`）、圖片用官網媒體庫（`_wp/media-map.json`，2026-10-13 上傳，檔名 `ys-free-course-*`）。
 
 **轉換追蹤（Pixel Cat）**：沿用官網現有事件 `free-course`（URL 觸發 `https://lin.ee/fqVra6s`）。Pixel Cat 只會綁 light DOM 裡 href 完全相同的 `<a>`，shadow DOM 裡的按鈕它找不到，所以 host 底下放一個不顯示的同網址連結 `#ys-free-course-line`，每顆 LINE 按鈕被點時用 `jQuery(proxy).triggerHandler('click')` 只觸發 Pixel Cat 綁的事件。**改 LINE 網址要同時改這裡和 Pixel Cat 的觸發網址。** 不要改成 CSS 觸發 `#某 id`：id 一頁只能有一個，Pixel Cat 用 jQuery 綁 `#id` 只會綁到第一顆，其他按鈕都不會送。
+
+**之後要改上線頁**（頁面 30151，2026-10-13 上線；舊內容備份在草稿頁 35314）：改 `_src` → `python3 _build/build_wp.py` → 推上 GitHub（Pages 會提供 `_wp/elementor-data.json`）→ 在已登入的官網後台用 REST 把它寫進頁面 30151 的 `_elementor_data` → **用 Elementor 編輯器開這頁按一次「更新」**（Elementor 有元素快取，只改資料不會生效；更新後 FlyingPress 會自動清快取）。圖片要換就上傳到媒體庫並更新 `_wp/media-map.json`。
+
+**官網快取與 CAPI**：Pixel Cat 的伺服器端事件（CAPI）會檢查頁面裡的 WordPress 驗證碼，12～24 小時過期；FlyingPress 已設每 6 小時自動重建快取（2026-10-13），不要調到 12 或 24 小時以上。
